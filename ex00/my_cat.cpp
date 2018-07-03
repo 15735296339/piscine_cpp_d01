@@ -1,27 +1,48 @@
-#include <iostream>
+#include "my_cat.h"
 #include <fstream>
-using namespace std;
-void my_cat(char **argv)
+#include <iostream>
+
+my_cat::my_cat()
 {
-	int	count;
-	count = 0;
-	char c;
-	while (argv[++count] != NULL)
-	{
-		ifstream file(argv[count], ios::in);
-		if (!file)
-			cerr << "my_cat: " << argv[count] <<": No such file or directory"<<endl;
-		else
-		while (file.get(c))
-			cout << c;
-	}
 }
 
-int main(int argc, char **argv)
+
+my_cat::~my_cat()
 {
-	if (argc >= 2)
-		my_cat(argv);
-	else
-		cout << "my_cat: Usage : ./my_cat file [...]"<<endl;
+}
+
+int my_cat::wr_file(std::string file_name)
+{
+	std::ifstream file_stream(file_name.c_str());
+	if (!file_stream)
+	{
+		return -1;
+	}
+
+	std::string str;
+	while (getline(file_stream, str))
+	{
+		std::cout << str << std::endl;
+	}
+
+	return 0;
+}
+
+int main(int argc, char** argv)
+{
+	if (argc <= 1)
+	{
+		std::cout << "my_cat: Usage : ./my_cat file [...]";
+		return 0;
+	}
+
+	for (int i = 1; i < argc; ++i)
+	{
+		if (my_cat::wr_file(argv[i]) < 0)
+		{
+			std::cout << "my_cat: " << argv[i] << ": No such file or directory";
+		}
+	}
+
 	return 0;
 }
